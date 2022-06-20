@@ -19,6 +19,7 @@ public class GRPCSampler extends AbstractSampler implements ThreadListener {
     public static final String METADATA = "GRPCSampler.metadata";
     public static final String LIB_FOLDER = "GRPCSampler.libFolder";
     public static final String PROTO_FOLDER = "GRPCSampler.protoFolder";
+    public static final String BIN_DESCRIPTOR = "GRPCSampler.binDescriptor";
     public static final String HOST = "GRPCSampler.host";
     public static final String PORT = "GRPCSampler.port";
     public static final String FULL_METHOD = "GRPCSampler.fullMethod";
@@ -49,8 +50,7 @@ public class GRPCSampler extends AbstractSampler implements ThreadListener {
         if (clientCaller == null) {
             clientCaller = new ClientCaller(
                     getHostPort(),
-                    getProtoFolder(),
-                    getLibFolder(),
+                    getBinDescriptor(),
                     getFullMethod(),
                     isTls(),
                     isTlsDisableVerification());
@@ -162,6 +162,14 @@ public class GRPCSampler extends AbstractSampler implements ThreadListener {
 
     public void setProtoFolder(String protoFolder) {
         setProperty(PROTO_FOLDER, protoFolder);
+    }
+
+    public byte[] getBinDescriptor() {
+        return getPropertyAsString(BIN_DESCRIPTOR).getBytes(StandardCharsets.ISO_8859_1);
+    }
+
+    public void setBinDescriptor(byte[] protoFolder) {
+        setProperty(BIN_DESCRIPTOR, new String(protoFolder,StandardCharsets.ISO_8859_1));
     }
 
     public String getFullMethod() {

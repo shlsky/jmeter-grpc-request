@@ -25,6 +25,7 @@ import vn.zalopay.benchmark.core.specification.GrpcResponse;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
@@ -42,11 +43,11 @@ public class ClientCaller {
     private boolean disableTtlVerification;
     ChannelFactory channelFactory;
 
-    public ClientCaller(String HOST_PORT, String TEST_PROTO_FILES, String LIB_FOLDER, String FULL_METHOD, boolean TLS, boolean TLS_DISABLE_VERIFICATION) {
-        this.init(HOST_PORT, TEST_PROTO_FILES, LIB_FOLDER, FULL_METHOD, TLS, TLS_DISABLE_VERIFICATION);
+    public ClientCaller(String HOST_PORT, byte[] pbBin, String FULL_METHOD, boolean TLS, boolean TLS_DISABLE_VERIFICATION) {
+        this.init(HOST_PORT, pbBin, FULL_METHOD, TLS, TLS_DISABLE_VERIFICATION);
     }
 
-    private void init(String HOST_PORT, String TEST_PROTO_FILES, String LIB_FOLDER, String FULL_METHOD, boolean TLS, boolean TLS_DISABLE_VERIFICATION) {
+    private void init(String HOST_PORT, byte[] pbBin, String FULL_METHOD, boolean TLS, boolean TLS_DISABLE_VERIFICATION) {
         try {
             tls = TLS;
             disableTtlVerification = TLS_DISABLE_VERIFICATION;
@@ -60,7 +61,7 @@ public class ClientCaller {
             final DescriptorProtos.FileDescriptorSet fileDescriptorSet;
 
             try {
-                fileDescriptorSet = ProtocInvoker.forConfig(TEST_PROTO_FILES, LIB_FOLDER).invoke();
+                fileDescriptorSet = DescriptorProtos.FileDescriptorSet.parseFrom(pbBin);
             } catch (Throwable t) {
                 shutdownNettyChannel();
                 throw new RuntimeException("Unable to resolve service by invoking protoc", t);

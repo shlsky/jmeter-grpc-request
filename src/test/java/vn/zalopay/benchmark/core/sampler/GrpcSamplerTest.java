@@ -1,5 +1,6 @@
 package vn.zalopay.benchmark.core.sampler;
 
+import com.alibaba.fastjson.JSON;
 import com.google.common.net.HostAndPort;
 import com.google.protobuf.util.JsonFormat;
 import org.apache.jmeter.samplers.SampleResult;
@@ -13,7 +14,38 @@ import vn.zalopay.benchmark.core.ClientCaller;
 import vn.zalopay.benchmark.core.message.Writer;
 import vn.zalopay.benchmark.core.specification.GrpcResponse;
 
+import java.io.IOException;
+import java.nio.file.FileSystem;
+import java.nio.file.FileSystems;
+import java.nio.file.Files;
+
 public class GrpcSamplerTest extends BaseTest {
+
+    @Test
+    public void testCanSendSampleBinDesc() {
+        HostAndPort hostAndPort = HostAndPort.fromString("127.0.0.1:9008");
+        GRPCSampler grpcSampler = new GRPCSampler();
+        grpcSampler.setComment("dummyComment");
+//
+        try {
+            grpcSampler.setBinDescriptor(Files.readAllBytes(FileSystems.getDefault().getPath(
+                    "/var/folders/59/75_hsb011f9g5xhv2lztkvd80000gq/T/descriptor611663435735270997.pb.bin")));
+        } catch (IOException ioException) {
+            ioException.printStackTrace();
+        }
+        grpcSampler.setMetadata("");
+        grpcSampler.setHost(hostAndPort.getHost());
+        grpcSampler.setPort(Integer.toString(hostAndPort.getPort()));
+        grpcSampler.setFullMethod("hello.Hello/SayHello");
+        grpcSampler.setDeadline("2000");
+        grpcSampler.setTls(false);
+        grpcSampler.setTlsDisableVerification(false);
+        grpcSampler.setRequestJson("{\n" +
+                "\t\"Name\":\"fff4\"\n" +
+                "}");
+        SampleResult sampleResult = grpcSampler.sample(null);
+        System.out.println(JSON.toJSONString(sampleResult));
+    }
 
     @Test
     public void testCanSendSampleRequest() {
