@@ -107,6 +107,54 @@
         </dependency>
     </dependencies>
 
+    <!--私库上传-->
+    <distributionManagement>
+        <repository>
+            <id>nexus-releases</id>
+            <name>corp nexus-releases</name>
+            <url>https://nexus.bydev.io/nexus/repository/releases/</url>
+        </repository>
+        <snapshotRepository>
+            <id>snapshots</id>
+            <name>corp nexus-snapshot</name>
+            <url>https://nexus.bydev.io/nexus/repository/snapshots/</url>
+        </snapshotRepository>
+    </distributionManagement>
+
+    <!--私库下载-->
+    <repositories>
+        <repository>
+            <id>snapshots</id>
+            <url>https://nexus.bydev.io/nexus/content/repositories/snapshots/</url>
+            <releases>
+                <enabled>false</enabled>
+            </releases>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+        </repository>
+        <repository>
+            <id>releases</id>
+            <url>https://nexus.bydev.io/nexus/content/repositories/releases/</url>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+        </repository>
+        <repository>
+            <id>public</id>
+            <url>https://nexus.bydev.io/nexus/content/groups/public/</url>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+        </repository>
+    </repositories>
+
     <build>
         <defaultGoal>clean generate-sources compile install</defaultGoal>
         <finalName>${project.artifactId}</finalName>
